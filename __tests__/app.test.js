@@ -1,5 +1,5 @@
 const pool = require('../lib/utils/pool');
-const twilio = require('twilio');
+// const twilio = require('twilio');
 const setup = require('../data/setup');
 const request = require('supertest');
 const app = require('../lib/app');
@@ -39,22 +39,22 @@ describe('03_separation-of-concerns-demo routes', () => {
       });
   });
 
-  it('should return all orders', async () => {
+  it('should return an order by id', async () => {
     const order = await Order.insert({ quantity: 10 });
     return request(app)
       .get(`/api/v1/orders/${order.id}`)
       .then((res) => {
-        expect(res.body).toEqual([order]);
+        expect(res.body).toEqual(order);
       });
   });
 
   it('should update an order by id', async () => {
     const order = await Order.insert({ quantity: 10 });
     return request(app)
-      .get(`/api/v1/orders/${order.id}`)
+      .put(`/api/v1/orders/${order.id}`)
       .send({ quantity: 20 })
       .then((res) => {
-        expect(res.body).toEqual({ id: 1, quantity: 20 });
+        expect(res.body).toEqual({ id: '1', quantity: 20 });
       });
   });
 
@@ -63,7 +63,7 @@ describe('03_separation-of-concerns-demo routes', () => {
     return request(app)
       .delete(`/api/v1/orders/${order.id}`)
       .then((res) => {
-        expect(res.body).not.toEqual(order);
+        expect(res.body).toEqual({});
       });
   });
 });
